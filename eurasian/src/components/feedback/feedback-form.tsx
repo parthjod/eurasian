@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useFormStatus } from "react-dom";
@@ -6,6 +5,7 @@ import { useActionState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +17,13 @@ import { useToast } from "@/hooks/use-toast";
 
 const feedbackSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  feedbackType: z.enum(["bug", "feature", "general"], { message: "Please select a feedback type." }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters." }).max(1000, {message: "Message must be at most 1000 characters."}),
+  feedbackType: z.enum(["bug", "feature", "general"], {
+    message: "Please select a feedback type.",
+  }),
+  message: z
+    .string()
+    .min(10, { message: "Message must be at least 10 characters." })
+    .max(1000, { message: "Message must be at most 1000 characters." }),
 });
 
 type FeedbackFormValues = z.infer<typeof feedbackSchema>;
@@ -44,7 +49,8 @@ export default function FeedbackForm() {
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
       email: state.fields?.email || "",
-      feedbackType: state.fields?.feedbackType as "bug" | "feature" | "general" || undefined,
+      feedbackType:
+        (state.fields?.feedbackType as "bug" | "feature" | "general") || undefined,
       message: state.fields?.message || "",
     },
   });
@@ -57,8 +63,9 @@ export default function FeedbackForm() {
       });
       form.reset({ email: "", feedbackType: undefined, message: "" });
     }
+
     if (state?.error) {
-       toast({
+      toast({
         title: "Error",
         description: state.error,
         variant: "destructive",
@@ -66,17 +73,20 @@ export default function FeedbackForm() {
     }
 
     if (state.fields) {
-        form.reset({
-            email: state.fields.email || "",
-            feedbackType: state.fields.feedbackType as "bug" | "feature" | "general" || undefined,
-            message: state.fields.message || "",
-        })
+      form.reset({
+        email: state.fields.email || "",
+        feedbackType:
+          (state.fields.feedbackType as "bug" | "feature" | "general") || undefined,
+        message: state.fields.message || "",
+      });
     }
   }, [state, toast, form]);
-  
-  const getErrorForField = (fieldName: keyof FeedbackFormValues) => {
-    return state.issues?.find(issue => issue.startsWith(fieldName + ':'))?.split(': ')[1];
-  }
+
+  const getErrorForField = (fieldName: keyof FeedbackFormValues): string | undefined => {
+    return state.issues
+      ?.find((issue) => issue.startsWith(`${fieldName}:`))
+      ?.split(": ")[1];
+  };
 
   return (
     <Card className="w-full max-w-lg mx-auto shadow-xl">
@@ -95,12 +105,22 @@ export default function FeedbackForm() {
               placeholder="you@example.com"
               aria-describedby="email-error"
             />
-            {getErrorForField("email") && <p id="email-error" className="text-sm text-destructive">{getErrorForField("email")}</p>}
+            {getErrorForField("email") && (
+              <p id="email-error" className="text-sm text-destructive">
+                {getErrorForField("email")}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="feedbackType">Feedback Type</Label>
-            <Select name="feedbackType" onValueChange={(value: string) => form.setValue("feedbackType", value as any)} value={form.watch("feedbackType")}>
+            <Select
+              name="feedbackType"
+              onValueChange={(value: "bug" | "feature" | "general") =>
+                form.setValue("feedbackType", value)
+              }
+              value={form.watch("feedbackType")}
+            >
               <SelectTrigger id="feedbackType" aria-describedby="feedbackType-error">
                 <SelectValue placeholder="Select a type" />
               </SelectTrigger>
@@ -110,7 +130,11 @@ export default function FeedbackForm() {
                 <SelectItem value="general">General Feedback</SelectItem>
               </SelectContent>
             </Select>
-            {getErrorForField("feedbackType") && <p id="feedbackType-error" className="text-sm text-destructive">{getErrorForField("feedbackType")}</p>}
+            {getErrorForField("feedbackType") && (
+              <p id="feedbackType-error" className="text-sm text-destructive">
+                {getErrorForField("feedbackType")}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -122,11 +146,19 @@ export default function FeedbackForm() {
               rows={5}
               aria-describedby="message-error"
             />
-            {getErrorForField("message") && <p id="message-error" className="text-sm text-destructive">{getErrorForField("message")}</p>}
+            {getErrorForField("message") && (
+              <p id="message-error" className="text-sm text-destructive">
+                {getErrorForField("message")}
+              </p>
+            )}
           </div>
-          
-          {state?.error && !state.issues?.length && <p className="text-sm text-destructive">{state.error}</p>}
-          {state?.message && !state.error && <p className="text-sm text-green-600">{state.message}</p>}
+
+          {state?.error && !state.issues?.length && (
+            <p className="text-sm text-destructive">{state.error}</p>
+          )}
+          {state?.message && !state.error && (
+            <p className="text-sm text-green-600">{state.message}</p>
+          )}
 
           <SubmitButton />
         </form>

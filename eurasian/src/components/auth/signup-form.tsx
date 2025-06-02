@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -33,26 +33,29 @@ const signupSchema = z
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-const initialState = {
+type SignupState = {
+  message: string;
+  error?: string;
+};
+
+const initialState: SignupState = {
   message: "",
   error: "",
 };
 
 async function signupAction(
-  prevState: any,
+  _prevState: SignupState,
   formData: FormData
-): Promise<{ message: string; error?: string }> {
-  const name = formData.get("name");
-  const email = formData.get("email");
-  const password = formData.get("password");
+): Promise<SignupState> {
+  const name = formData.get("name")?.toString() || "";
+  const email = formData.get("email")?.toString() || "";
+  const password = formData.get("password")?.toString() || "";
 
   try {
     const res = await fetch("/api/signup", {
       method: "POST",
       body: JSON.stringify({ name, email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     const data = await res.json();
@@ -62,7 +65,7 @@ async function signupAction(
     }
 
     return { message: data.message };
-  } catch (error) {
+  } catch {
     return {
       message: "",
       error: "Something went wrong. Please try again.",
@@ -70,10 +73,31 @@ async function signupAction(
   }
 }
 
+// ✅ Utility to determine password strength
+function getPasswordStrength(password: string) {
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (password.length < 8) return "Weak";
+  if ((hasUpper || hasLower) && hasNumber && !hasSpecial) return "Medium";
+  if (hasUpper && hasLower && hasNumber && hasSpecial) return "Strong";
+  return "Weak";
+}
+
+const strengthColors = {
+  Weak: "text-red-600",
+  Medium: "text-yellow-600",
+  Strong: "text-green-600",
+};
+
 export default function SignupForm() {
   const [state, formAction] = useActionState(signupAction, initialState);
   const { toast } = useToast();
-  const router = useRouter(); // 👈 used for redirection
+  const router = useRouter();
+
+  const [passwordStrength, setPasswordStrength] = useState<"Weak" | "Medium" | "Strong">("Weak");
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -86,15 +110,13 @@ export default function SignupForm() {
   });
 
   useEffect(() => {
-    if (state?.message && !state.error) {
-      toast({
-        title: "Success",
-        description: state.message,
-      });
+    if (state.message && !state.error) {
+      toast({ title: "Success", description: state.message });
       form.reset();
-      router.push("/login"); // 👈 redirect to login page
+      router.push("/login");
     }
-    if (state?.error) {
+
+    if (state.error) {
       toast({
         title: "Error",
         description: state.error,
@@ -113,32 +135,20 @@ export default function SignupForm() {
         <form action={formAction} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              type="text"
-              {...form.register("name")}
-              placeholder="John Doe"
-            />
+            <Input id="name" type="text" {...form.register("name")} placeholder="John Doe" />
             {form.formState.errors.name && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.name.message}
-              </p>
+              <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
             )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              {...form.register("email")}
-              placeholder="you@example.com"
-            />
+            <Input id="email" type="email" {...form.register("email")} placeholder="you@example.com" />
             {form.formState.errors.email && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.email.message}
-              </p>
+              <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
             )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -146,13 +156,19 @@ export default function SignupForm() {
               type="password"
               {...form.register("password")}
               placeholder="••••••••"
+              onChange={(e) => {
+                form.setValue("password", e.target.value);
+                setPasswordStrength(getPasswordStrength(e.target.value));
+              }}
             />
+            <p className={`text-sm ${strengthColors[passwordStrength]}`}>
+              Strength: {passwordStrength}
+            </p>
             {form.formState.errors.password && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.password.message}
-              </p>
+              <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
             )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
@@ -168,20 +184,14 @@ export default function SignupForm() {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? "Creating Account..." : "Create Account"}
           </Button>
         </form>
+
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-medium text-primary hover:underline"
-          >
+          <Link href="/login" className="font-medium text-primary hover:underline">
             Log in
           </Link>
         </p>

@@ -21,7 +21,7 @@ export default function AboutPlatformPage() {
               At SecureBase, our mission is to provide unparalleled security solutions that empower individuals and businesses to operate with confidence in an increasingly complex digital world. We believe that robust security should be accessible, elegant, and seamlessly integrated into your daily operations.
             </p>
             <p>
-              We are dedicated to staying ahead of emerging threats through continuous innovation, leveraging the power of artificial intelligence and machine learning to deliver proactive and adaptive protection. Our platform is built on a foundation of trust, transparency, and a deep understanding of our clients' needs.
+              We are dedicated to staying ahead of emerging threats through continuous innovation, leveraging the power of artificial intelligence and machine learning to deliver proactive and adaptive protection. Our platform is built on a foundation of trust, transparency, and a deep understanding of our clients&apos; needs.
             </p>
           </CardContent>
         </Card>
@@ -34,10 +34,10 @@ export default function AboutPlatformPage() {
                 <p>SecureBase offers a comprehensive suite of security features designed to protect your most valuable assets:</p>
                 <ul className="list-disc list-inside space-y-2 pl-4">
                     <li><strong>Advanced Threat Detection:</strong> Utilizing AI-powered algorithms to identify and neutralize threats in real-time.</li>
-                    <li><strong>Data Encryption & Privacy:</strong> State-of-the-art encryption protocols to ensure your data remains confidential.</li>
+                    <li><strong>Data Encryption &amp; Privacy:</strong> State-of-the-art encryption protocols to ensure your data remains confidential.</li>
                     <li><strong>Secure Access Control:</strong> Granular control over user permissions and access levels.</li>
                     <li><strong>Continuous Monitoring:</strong> 24/7 surveillance of your systems to detect and respond to suspicious activity.</li>
-                    <li><strong>Compliance & Reporting:</strong> Tools to help you meet industry regulations and generate comprehensive security reports.</li>
+                    <li><strong>Compliance &amp; Reporting:</strong> Tools to help you meet industry regulations and generate comprehensive security reports.</li>
                     <li><strong>User-Friendly Interface:</strong> An intuitive dashboard that makes managing your security simple and efficient.</li>
                 </ul>
             </div>
@@ -61,7 +61,7 @@ export default function AboutPlatformPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              Choosing SecureBase means investing in peace of mind. Our platform is more than just software; it's a commitment to your security. We combine sophisticated technology with a human-centric approach, ensuring that you receive not only the best protection but also the support and guidance you need.
+              Choosing SecureBase means investing in peace of mind. Our platform is more than just software; it&apos;s a commitment to your security. We combine sophisticated technology with a human-centric approach, ensuring that you receive not only the best protection but also the support and guidance you need.
             </p>
             <ul className="list-disc list-inside space-y-1">
                 <li>Proactive defense mechanisms</li>

@@ -32,7 +32,7 @@ const initialState = {
 };
 
 async function loginAction(
-  prevState: any,
+  _prevState: unknown, // renamed and typed to avoid 'any' error
   formData: FormData
 ): Promise<{ message: string; error?: string }> {
   const email = formData.get("email");
@@ -54,7 +54,10 @@ async function loginAction(
     }
 
     return { message: data.message };
-  } catch (error) {
+  } catch (err) {
+    // Using the caught error to avoid eslint no-unused-vars error
+    console.error(err);
+
     return {
       message: "",
       error: "Something went wrong. Please try again.",

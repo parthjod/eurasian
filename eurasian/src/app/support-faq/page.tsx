@@ -7,7 +7,7 @@ const faqItems = [
   },
   {
     question: "How do I reset my password?",
-    answer: "You can reset your password by navigating to the login page and clicking the 'Forgot Password' link. Follow the on-screen instructions to receive a password reset email.",
+    answer: "You can reset your password by navigating to the login page and clicking the &apos;Forgot Password&apos; link. Follow the on-screen instructions to receive a password reset email.",
   },
   {
     question: "What are the system requirements for SecureBase?",
@@ -23,7 +23,7 @@ const faqItems = [
   },
   {
     question: "How can I contact support?",
-    answer: "You can contact our support team through the 'Feedback' form on our website, or by emailing support@securebase.example.com. Pro and Enterprise plan users have access to priority support channels.",
+    answer: "You can contact our support team through the &apos;Feedback&apos; form on our website, or by emailing support@securebase.example.com. Pro and Enterprise plan users have access to priority support channels.",
   },
 ];
 
@@ -33,7 +33,7 @@ export default function SupportFaqPage() {
       <section className="text-center">
         <h1 className="text-4xl font-bold font-headline mb-4">Support & FAQ</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Find answers to common questions about SecureBase. If you need further assistance, please don't hesitate to contact us.
+          Find answers to common questions about SecureBase. If you need further assistance, please don&apos;t hesitate to contact us.
         </p>
       </section>
 
