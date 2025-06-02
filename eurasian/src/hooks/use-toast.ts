@@ -4,19 +4,20 @@
 import * as React from "react";
 import type {
   ToastActionElement,
-  ToastProps,
+  ToastProps
 } from "@/components/ui/toast";
+
+// Define ToasterToast type here if not exported from the module
+export interface ToasterToast extends ToastProps {
+  id: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
-type ToasterToast = ToastProps & {
-  id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  action?: ToastActionElement;
-};
-
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ACTION_TYPES = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
@@ -144,7 +145,7 @@ function toast(props: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open: boolean) => {
         if (!open) dismiss();
       },
     },
