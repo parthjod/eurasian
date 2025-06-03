@@ -60,6 +60,8 @@ export default function FeedbackForm() {
       toast({
         title: "Success!",
         description: state.message,
+        open: true,
+        onOpenChange: () => {},
       });
       form.reset({ email: "", feedbackType: undefined, message: "" });
     }
@@ -69,6 +71,8 @@ export default function FeedbackForm() {
         title: "Error",
         description: state.error,
         variant: "destructive",
+        open: true,
+        onOpenChange: () => {},
       });
     }
 
