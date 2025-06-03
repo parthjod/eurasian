@@ -32,7 +32,7 @@ const initialState = {
 };
 
 async function loginAction(
-  _prevState: unknown, // renamed and typed to avoid 'any' error
+  _prevState: unknown,
   formData: FormData
 ): Promise<{ message: string; error?: string }> {
   const email = formData.get("email");
@@ -55,9 +55,7 @@ async function loginAction(
 
     return { message: data.message };
   } catch (err) {
-    // Using the caught error to avoid eslint no-unused-vars error
     console.error(err);
-
     return {
       message: "",
       error: "Something went wrong. Please try again.",
@@ -68,7 +66,7 @@ async function loginAction(
 export default function LoginForm() {
   const [state, formAction] = useActionState(loginAction, initialState);
   const { toast } = useToast();
-  const router = useRouter(); // 👈 router for redirection
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -83,15 +81,19 @@ export default function LoginForm() {
       toast({
         title: "Success",
         description: state.message,
+        open: true,
+        onOpenChange: () => {},
       });
       form.reset();
-      router.push("/"); // 👈 redirect to home page
+      router.push("/"); // Redirect to homepage on successful login
     }
     if (state?.error) {
       toast({
         title: "Error",
         description: state.error,
         variant: "destructive",
+        open: true,
+        onOpenChange: () => {},
       });
     }
   }, [state, toast, form, router]);
@@ -100,12 +102,10 @@ export default function LoginForm() {
     <Card className="w-full max-w-md mx-auto shadow-xl">
       <CardHeader>
         <CardTitle className="text-3xl font-headline">Login to SecureBase</CardTitle>
-        <CardDescription>
-          Access your account to manage your security.
-        </CardDescription>
+        <CardDescription>Access your account to manage your security.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-6">
+        <form action={formAction} className="space-y-6" noValidate>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -113,9 +113,11 @@ export default function LoginForm() {
               type="email"
               {...form.register("email")}
               placeholder="you@example.com"
+              aria-invalid={!!form.formState.errors.email}
+              aria-describedby="email-error"
             />
             {form.formState.errors.email && (
-              <p className="text-sm text-destructive">
+              <p id="email-error" className="text-sm text-destructive">
                 {form.formState.errors.email.message}
               </p>
             )}
@@ -127,9 +129,11 @@ export default function LoginForm() {
               type="password"
               {...form.register("password")}
               placeholder="••••••••"
+              aria-invalid={!!form.formState.errors.password}
+              aria-describedby="password-error"
             />
             {form.formState.errors.password && (
-              <p className="text-sm text-destructive">
+              <p id="password-error" className="text-sm text-destructive">
                 {form.formState.errors.password.message}
               </p>
             )}
@@ -140,20 +144,13 @@ export default function LoginForm() {
             </Link>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? "Logging in..." : "Login"}
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="font-medium text-primary hover:underline"
-          >
+          <Link href="/signup" className="font-medium text-primary hover:underline">
             Sign up
           </Link>
         </p>

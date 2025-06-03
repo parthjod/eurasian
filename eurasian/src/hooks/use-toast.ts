@@ -2,19 +2,19 @@
 
 // Inspired by react-hot-toast library
 import * as React from "react";
-import type {ToastProps} from "@/components/ui/toast";
+import type { ToastProps } from "@/components/ui/toast";
 
 // Define ToasterToast type here if not exported from the module
 export interface ToasterToast extends ToastProps {
   id: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  description?: string; // ✅ Added support for description
 }
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ACTION_TYPES = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
