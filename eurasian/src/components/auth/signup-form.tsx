@@ -111,7 +111,13 @@ export default function SignupForm() {
 
   useEffect(() => {
     if (state.message && !state.error) {
-      toast({ title: "Success", description: state.message });
+      toast({
+        title: "Success",
+        description: state.message,
+        variant: "default",
+        open: true,
+        onOpenChange: () => {},
+      });
       form.reset();
       router.push("/login");
     }
@@ -121,6 +127,8 @@ export default function SignupForm() {
         title: "Error",
         description: state.error,
         variant: "destructive",
+        open: true,
+        onOpenChange: () => {},
       });
     }
   }, [state, toast, form, router]);
