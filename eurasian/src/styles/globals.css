@@ -1,0 +1,13 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8ff;
+  color: #333;
+  margin: 0;
+}
+button {
+  background-color: red;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+}
