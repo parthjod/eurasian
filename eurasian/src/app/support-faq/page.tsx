@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
+import '@/styles/support.css';
 const faqItems = [
   {
     question: "What is SecureBase?",
@@ -29,8 +29,8 @@ const faqItems = [
 
 export default function SupportFaqPage() {
   return (
-    <div className="space-y-12 py-8">
-      <section className="text-center">
+    <div className="faq-page">
+      <section className="faq-section">
         <h1 className="text-4xl font-bold font-headline mb-4">Support & FAQ</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Find answers to common questions about SecureBase. If you need further assistance, please don&apos;t hesitate to contact us.

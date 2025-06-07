@@ -141,7 +141,7 @@ export default function FeedbackForm() {
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="feedback-form">
             <Label htmlFor="message">Message</Label>
             <Textarea
               id="message"

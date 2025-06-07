@@ -14,7 +14,7 @@ interface TeamMemberCardProps {
 
 export default function TeamMemberCard({ name, title, expertise, imageUrl, bio, linkedin, twitter }: TeamMemberCardProps) {
   return (
-    <Card className="flex flex-col items-center text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <Card className="team-card">
       <CardHeader className="pb-2">
         <Image
           src={imageUrl}
