@@ -5,15 +5,14 @@ type JwtPayload = {
   [key: string]: any;
 };
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'default-secret-key');
+const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? 'default-secret-key');
 
 export async function signJwt(payload: JwtPayload) {
-  const token = await new SignJWT(payload)
+  return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('24h')
     .setSubject(payload.sub)
     .setAudience('securebase-app')
     .sign(secret);
-  return token;
 }
