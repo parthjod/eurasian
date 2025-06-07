@@ -1,13 +1,161 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8ff;
-  color: #333;
-  margin: 0;
+/* === Global Theme Variables === */
+:root {
+  --background: #F8F8FF;
+  --foreground: #2c2f35;
+
+  --card: #ffffff;
+  --card-foreground: #2c2f35;
+
+  --primary: #B8860B;
+  --primary-foreground: #fffbea;
+
+  --secondary: #fdf6e3;
+  --secondary-foreground: #8b6f00;
+
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+
+  --accent: #556B2F;
+  --accent-foreground: #f8f9fa;
+
+  --border: #d1d5db;
+  --input: #f9fafb;
+  --ring: #daa520;
+
+  --radius: 0.5rem;
 }
+
+/* === Global Reset & Base === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+}
+
+/* === Typography === */
+h1, h2, h3, h4, h5 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+/* === Layout === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* === Buttons === */
 button {
-  background-color: red;
-  color: white;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
   border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+/* === Pricing Card === */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.card-features {
+  list-style: none;
+  margin-top: 1rem;
+  padding-left: 1rem;
+}
+
+.card-features li::before {
+  content: "✔";
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+
+.card-button {
+  margin-top: 1.5rem;
+}
+
+/* === Navigation Styles (if needed) === */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* === Footer === */
+.footer {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
 }
