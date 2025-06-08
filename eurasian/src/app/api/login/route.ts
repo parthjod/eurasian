@@ -4,47 +4,13 @@ import User from '@/models/User'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-// Interface for login request body
-interface LoginBody {
-  email: string;
-  password: string;
-}
-
-// Interface for JWT payload
-interface JWTPayload {
-  userId: string;
-  email: string;
-  iat: number;
-  exp: number;
-}
-
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key'
-
-// Helper function to validate email format
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
-
-// Helper function to generate JWT token
-function generateJWT(userId: string, email: string): string {
-  return jwt.sign(
-    { 
-      userId, 
-      email,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
-    } as JWTPayload,
-    JWT_SECRET
-  )
-}
 
 export async function POST(req: NextRequest) {
   try {
-    const body: LoginBody = await req.json()
-    const { email, password } = body
+    const { email, password } = await req.json()
 
-    // Input validation
+    // Basic validation
     if (!email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
@@ -52,36 +18,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    if (typeof email !== 'string' || typeof password !== 'string') {
-      return NextResponse.json(
-        { error: 'Email and password must be strings' },
-        { status: 400 }
-      )
-    }
-
-    const trimmedEmail = email.trim().toLowerCase()
-    
-    if (!isValidEmail(trimmedEmail)) {
-      return NextResponse.json(
-        { error: 'Please provide a valid email address' },
-        { status: 400 }
-      )
-    }
-
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
-        { status: 400 }
-      )
-    }
-
     await connectDB()
 
     // Find user by email
-    const user = await User.findOne({ email: trimmedEmail })
+    const user = await User.findOne({ email: email.trim().toLowerCase() })
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' }, // Don't reveal which one is wrong
+        { error: 'Invalid email or password' },
         { status: 401 }
       )
     }
@@ -101,43 +44,25 @@ export async function POST(req: NextRequest) {
     })
 
     // Generate JWT token
-    const token = generateJWT(user._id.toString(), user.email)
+    const token = jwt.sign(
+      { userId: user._id.toString(), email: user.email },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    )
 
-    // Return success response with token and user info
+    // Return success response
     return NextResponse.json({
       message: 'Login successful',
       token,
       user: {
         id: user._id.toString(),
         name: user.name,
-        email: user.email,
-        authMethod: user.authMethod,
-        hasFaceAuth: user.faceDescriptor && user.faceDescriptor.length > 0
+        email: user.email
       }
-    }, { status: 200 })
+    })
 
-  } catch (err) {
-    console.error("Login error:", err)
-    
-    // Handle specific errors
-    if (err && typeof err === 'object' && 'name' in err) {
-      const errorName = (err as { name: string }).name
-      
-      if (errorName === 'MongooseError' || errorName === 'MongoError') {
-        return NextResponse.json(
-          { error: 'Database connection error. Please try again.' },
-          { status: 503 }
-        )
-      }
-
-      if (errorName === 'JsonWebTokenError') {
-        return NextResponse.json(
-          { error: 'Authentication error. Please try again.' },
-          { status: 500 }
-        )
-      }
-    }
-
+  } catch (error) {
+    console.error("Login error:", error)
     return NextResponse.json(
       { error: 'Login failed. Please try again.' },
       { status: 500 }
